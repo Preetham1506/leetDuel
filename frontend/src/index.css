@@ -1,0 +1,110 @@
+/* LeetRace Premium UI Stylesheet */
+
+:root {
+  /* Colors */
+  --bg-primary: hsl(224, 71%, 4%);
+  --bg-secondary: hsl(222, 47%, 7%);
+  --card-bg: rgba(15, 23, 42, 0.45);
+  --card-border: rgba(255, 255, 255, 0.08);
+  
+  --text-primary: hsl(210, 40%, 98%);
+  --text-secondary: hsl(215, 20%, 65%);
+  --text-muted: hsl(215, 16%, 47%);
+
+  --primary-glow: linear-gradient(135deg, hsl(263, 70%, 50%), hsl(243, 75%, 58%));
+  --accent-glow: linear-gradient(135deg, hsl(190, 90%, 52%), hsl(200, 95%, 48%));
+  
+  --accent-cyan: hsl(190, 90%, 52%);
+  --accent-gold: hsl(45, 93%, 47%);
+  --accent-emerald: hsl(142, 70%, 45%);
+  --accent-rose: hsl(346, 77%, 49%);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-primary);
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(217, 70, 239, 0.1) 0px, transparent 50%);
+  color: var(--text-primary);
+  font-family: 'Outfit', 'Inter', -apple-system, sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Glassmorphism Cards */
+.glass-card {
+  background: var(--card-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-card:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 12px 40px 0 rgba(99, 102, 241, 0.15);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes pulse-glow {
+  0% { box-shadow: 0 0 5px rgba(99, 102, 241, 0.2); }
+  100% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.5); }
+}
+
+.glow-btn {
+  background: var(--primary-glow);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, filter 0.2s;
+}
+
+.glow-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+  animation: pulse-glow 1.5s infinite alternate;
+}
+
+.glow-btn:active {
+  transform: translateY(0);
+}
+
+/* Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}

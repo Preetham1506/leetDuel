@@ -1,0 +1,49 @@
+{
+  "manifest_version": 3,
+  "name": "LeetRace Helper",
+  "version": "1.0.0",
+  "description": "Helper extension for LeetRace. Intercepts LeetCode submissions and injects real-time match overlays.",
+  "permissions": [
+    "webRequest",
+    "tabs",
+    "storage"
+  ],
+  "host_permissions": [
+    "*://leetcode.com/*",
+    "*://*.leetcode.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://leetcode.com/problems/*",
+        "*://*.leetcode.com/problems/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_end"
+    },
+    {
+      "matches": [
+        "http://localhost/*",
+        "http://127.0.0.1/*",
+        "http://192.168.29.168/*"
+      ],
+      "js": [
+        "register.js"
+      ],
+      "run_at": "document_start"
+    }
+  ],
+  "externally_connectable": {
+    "matches": [
+      "http://localhost/*",
+      "http://127.0.0.1/*",
+      "http://192.168.29.168/*"
+    ]
+  },
+  "action": {}
+}
