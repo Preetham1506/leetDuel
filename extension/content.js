@@ -500,9 +500,10 @@ function initializeRaceClient(match) {
       document.getElementById("leetrace-exit-btn").addEventListener("click", () => {
         // Clear cached match from storage
         chrome.storage.local.remove("activeMatch", () => {
-          // Redirect back to our platform lobby
           const frontendHost = match.frontendHost || "localhost:3000";
-          window.location.href = `http://${frontendHost}/lobby`;
+          const isLocal = frontendHost.startsWith("localhost") || frontendHost.startsWith("127.0.0.1") || frontendHost.startsWith("192.168.");
+          const protocol = isLocal ? "http" : "https";
+          window.location.href = `${protocol}://${frontendHost}/?tab=lobby`;
         });
       });
     }, 100);

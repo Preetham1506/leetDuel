@@ -29,7 +29,9 @@ const API_BASE = `${HTTP_PROTOCOL}://${API_HOST}/api`;
 export default function App() {
   const [token, setToken] = useState(localStorage.getItem('token') || '');
   const [user, setUser] = useState(null);
-  const [activeTab, setActiveTab] = useState('leaderboard'); // leaderboard, lobby, auth
+  const queryParams = new URLSearchParams(window.location.search);
+  const initialTab = queryParams.get('tab') || 'leaderboard';
+  const [activeTab, setActiveTab] = useState(initialTab); // leaderboard, lobby, auth
   
   // Auth Form states
   const [username, setUsername] = useState('');
