@@ -142,6 +142,12 @@ async def leave_match(match_id: int, current_user: User = Depends(get_current_us
     if not match:
         raise HTTPException(status_code=404, detail="Match not found")
         
+    if match.status == "ACTIVE":
+        # Leaving an active match forfeits it
+        await manager.handle_forfeit(match_id, current_user.id)
+        db.refresh(match)
+        return match
+        
     if match.status != "PENDING":
         raise HTTPException(status_code=400, detail="Match is already active or completed")
         
