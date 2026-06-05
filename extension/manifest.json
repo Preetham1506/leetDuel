@@ -30,7 +30,8 @@
       "matches": [
         "http://localhost/*",
         "http://127.0.0.1/*",
-        "http://192.168.29.168/*"
+        "http://192.168.29.168/*",
+        "https://leet-duel.vercel.app/*"
       ],
       "js": [
         "register.js"
@@ -42,7 +43,8 @@
     "matches": [
       "http://localhost/*",
       "http://127.0.0.1/*",
-      "http://192.168.29.168/*"
+      "http://192.168.29.168/*",
+      "https://leet-duel.vercel.app/*"
     ]
   },
   "action": {}
