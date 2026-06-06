@@ -53,6 +53,25 @@ export default function App() {
   const [isLobbyReady, setIsLobbyReady] = useState(false);
   const [lobbyWebSocket, setLobbyWebSocket] = useState(null);
 
+  // Extension status states
+  const [extensionDetected, setExtensionDetected] = useState(false);
+  const [showExtensionModal, setShowExtensionModal] = useState(false);
+
+  // Monitor extension registration
+  useEffect(() => {
+    const checkExtension = () => {
+      const extId = document.documentElement.getAttribute('data-leetrace-extension-id') 
+        || localStorage.getItem('leetrace_extension_id');
+      if (extId) {
+        setExtensionDetected(true);
+      }
+    };
+    checkExtension();
+    const observer = new MutationObserver(checkExtension);
+    observer.observe(document.documentElement, { attributes: true });
+    return () => observer.disconnect();
+  }, []);
+
   // Sync auth state
   useEffect(() => {
     if (token) {
@@ -935,6 +954,41 @@ export default function App() {
                 
                 {/* Match creation & Join section */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                  
+                  {!extensionDetected && (
+                    <div className="glass-card" style={{ 
+                      padding: '20px', 
+                      background: 'rgba(99, 102, 241, 0.08)', 
+                      border: '1px solid rgba(99, 102, 241, 0.25)', 
+                      borderRadius: '12px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '12px',
+                      boxShadow: '0 4px 20px rgba(99, 102, 241, 0.1)'
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <div style={{ padding: '8px', background: 'rgba(99, 102, 241, 0.15)', borderRadius: '8px', color: '#818cf8' }}>
+                          <Sparkles size={18} />
+                        </div>
+                        <span style={{ fontWeight: 700, fontSize: '15px', color: '#cbd5e1' }}>Chrome Extension Required</span>
+                      </div>
+                      <p style={{ color: '#94a3b8', fontSize: '13px', lineHeight: '1.5', margin: 0 }}>
+                        To participate in live matches, see real-time overlays on LeetCode, and automatically log ELO progress, please install the LeetRace Helper Chrome Extension.
+                      </p>
+                      <button 
+                        onClick={() => setShowExtensionModal(true)}
+                        className="glow-btn"
+                        style={{ 
+                          padding: '8px 16px', 
+                          fontSize: '13px', 
+                          alignSelf: 'flex-start',
+                          marginTop: '4px'
+                        }}
+                      >
+                        Install Helper Extension
+                      </button>
+                    </div>
+                  )}
                   <div className="glass-card" style={{ padding: '24px' }}>
                     <h2 style={{ fontSize: '22px', fontWeight: 800, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <Play size={20} color="#6366f1" /> Create a Race
@@ -1077,6 +1131,119 @@ export default function App() {
       }}>
         LeetRace Platform © 2026 • Powering DSA Races
       </footer>
+
+      {/* --- Extension Installation Guide Modal --- */}
+      {showExtensionModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(15, 23, 42, 0.8)',
+          backdropFilter: 'blur(12px)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 1000,
+          padding: '20px'
+        }}>
+          <div className="glass-card animate-fade-in" style={{
+            width: '100%',
+            maxWidth: '550px',
+            padding: '32px',
+            position: 'relative',
+            border: '1px solid rgba(99, 102, 241, 0.3)',
+            boxShadow: '0 10px 30px rgba(99, 102, 241, 0.15)',
+            textAlign: 'left'
+          }}>
+            <button 
+              onClick={() => setShowExtensionModal(false)}
+              style={{
+                position: 'absolute',
+                top: '20px',
+                right: '20px',
+                background: 'transparent',
+                border: 'none',
+                color: '#94a3b8',
+                fontSize: '20px',
+                cursor: 'pointer',
+                padding: '4px',
+                transition: 'color 0.2s'
+              }}
+              onMouseEnter={(e) => e.target.style.color = '#f8fafc'}
+              onMouseLeave={(e) => e.target.style.color = '#94a3b8'}
+            >
+              ✕
+            </button>
+
+            <h3 style={{
+              fontFamily: "'Outfit', sans-serif",
+              fontSize: '24px',
+              fontWeight: 800,
+              marginBottom: '10px',
+              background: 'linear-gradient(90deg, #f8fafc, #cbd5e1)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent'
+            }}>
+              Install LeetRace Helper
+            </h3>
+            <p style={{ color: '#94a3b8', fontSize: '14px', lineHeight: '1.6', marginBottom: '24px' }}>
+              The helper extension connects your LeetCode session to your active lobbies to track solutions and render the game overlay. Follow these quick steps to load it into Chrome.
+            </p>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '28px' }}>
+              <div style={{ display: 'flex', gap: '12px' }}>
+                <span style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minWidth: '24px', height: '24px', borderRadius: '50%', background: '#6366f1', color: 'white', fontWeight: 'bold', fontSize: '12px' }}>1</span>
+                <div>
+                  <span style={{ fontWeight: 700, color: '#f8fafc', fontSize: '14px' }}>Download the Extension</span>
+                  <p style={{ color: '#94a3b8', fontSize: '13px', margin: '2px 0 8px 0' }}>Click the button below to download the extension files zipped.</p>
+                  <a 
+                    href="/leetrace-extension.zip" 
+                    download 
+                    className="glow-btn"
+                    style={{ 
+                      display: 'inline-block',
+                      padding: '8px 16px', 
+                      fontSize: '12px',
+                      textDecoration: 'none',
+                      textAlign: 'center'
+                    }}
+                  >
+                    Download Extension (.zip)
+                  </a>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', gap: '12px' }}>
+                <span style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minWidth: '24px', height: '24px', borderRadius: '50%', background: '#3b82f6', color: 'white', fontWeight: 'bold', fontSize: '12px' }}>2</span>
+                <div>
+                  <span style={{ fontWeight: 700, color: '#f8fafc', fontSize: '14px' }}>Extract the Zip</span>
+                  <p style={{ color: '#94a3b8', fontSize: '13px', margin: '2px 0 0 0' }}>Locate the downloaded `leetrace-extension.zip` and extract/unzip it to a folder on your computer.</p>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', gap: '12px' }}>
+                <span style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minWidth: '24px', height: '24px', borderRadius: '50%', background: '#10b981', color: 'white', fontWeight: 'bold', fontSize: '12px' }}>3</span>
+                <div>
+                  <span style={{ fontWeight: 700, color: '#f8fafc', fontSize: '14px' }}>Load it into Chrome</span>
+                  <p style={{ color: '#94a3b8', fontSize: '13px', margin: '2px 0 0 0', lineHeight: '1.5' }}>
+                    Open a new tab in Chrome, go to <span style={{ color: '#60a5fa', fontWeight: 'bold' }}>chrome://extensions/</span>, toggle <span style={{ fontWeight: 'bold' }}>Developer Mode</span> in the top-right, click <span style={{ fontWeight: 'bold' }}>Load unpacked</span> in the top-left, and select the extracted folder.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <button 
+              onClick={() => setShowExtensionModal(false)}
+              className="glow-btn"
+              style={{ width: '100%', padding: '12px', background: 'transparent', border: '1px solid rgba(255,255,255,0.1)', color: '#cbd5e1' }}
+            >
+              I've installed it
+            </button>
+          </div>
+        </div>
+      )}
 
     </div>
   );
